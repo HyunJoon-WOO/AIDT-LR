@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDT LR 데이터 개행처리기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            max-width: 1200px;
+            margin: auto;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 14px; /* 기존 16px에서 2pt 줄인 14px로 설정 */
+        }
+        .result {
+            white-space: pre-wrap;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background: #f9f9f9;
+            min-height: 150px;
+            font-size: 14px; /* 기존 16px에서 2pt 줄인 14px로 설정 */
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 14px; /* 기존 16px에서 2pt 줄인 14px로 설정 */
+            cursor: pointer;
+        }
+        .divider {
+            margin: 10px 0;
+            border-top: 1px solid #000;
+        }
+        .highlight-red {
+            color: red;
+        }
+        .highlight-blue {
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>AIDT LR 데이터 개행처리기</h1>
+    <textarea id="inputText" placeholder="LR 데이터를 그대로 입력해주세요."></textarea>
+    <button onclick="processText()">처리하기</button>
+    <div class="result" id="resultText">
+        결과 텍스트가 여기에 표시됩니다.
+    </div>
+</div>
+
+<script>
+    function processText() {
+        let inputText = document.getElementById('inputText').value;
+        let resultHTML = "";
+        
+        // 텍스트를 {}와 , 기준으로 개행 처리
+        inputText = inputText.replace(/([{},])/g, '$1\n');
+        
+        const lines = inputText.split('\n');
+        lines.forEach(line => {
+            // {'createdAt': 단어가 시작될 때 구분선을 추가
+            if (line.includes("{'createdAt':")) {
+                resultHTML += '<div class="divider"></div>';
+            }
+            // createdAt 텍스트를 빨간색으로 강조
+            line = line.replace(/createdAt/g, '<span class="highlight-red">createdAt</span>');
+            // eventName 텍스트를 파란색으로 강조
+            line = line.replace(/eventName/g, '<span class="highlight-blue">eventName</span>');
+            resultHTML += line + '<br>';
+        });
+        
+        document.getElementById('resultText').innerHTML = resultHTML;
+    }
+</script>
+
+</body>
+</html>
